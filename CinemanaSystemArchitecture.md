@@ -68,15 +68,16 @@ There are several quality attributes that are important for Cinemana software ar
    ![layered_pattern](image/CinemanaSystemArchitecture/layered_pattern.png)
    By analyzing the Cinemana system architecture using the layered pattern viewpoint, the security quality attribute can be addressed in a comprehensive and systematic way, ensuring that the system is secure at all levels of the architecture.
 
-   2. Scalability
+2. Scalability
 
    - Horizontal Scaling — add more application servers behind the load balancer to increase the capacity o the service.
    - Database replication — Use the relational database in Master-slave configuration where the write will happen to the master and reads from the slave. This will improve the performance of reading queries as they won’t be stopped due to write locks on rows. There is a slight replication lag (a few milliseconds) as data is written to the master DB and then propagated to the slave DB.
    - Database sharding — distributing data to multiple servers to perform read/write operations efficiently. we can share the video metadata database using video_id. our hash function will map each video_id to a random server where we can store the video metadata.
    - Cache sharding — We can distribute our cache to multiple servers. Redis has out-of-box support for partitioning the data across multiple Redis instances. Using consistent Hashing for distributing data will ensure that load is equally distributed if one instance goes away.
    - Search database sharding — Elasticsearch comes with native support for sharding and replication. Sharding helps in improving the query runtime by running them in parallel against multiple shards.
-2. Usability
+   
+3. Usability
    The user interface (of the web app).
-   ![CinemanaUI](image/CinemanaSystemArchitecture/CinemanaUI.png)
+   ![cinemanaUI](image/CinemanaSystemArchitecture/cinemanaUI.png)
 
    TODO - Use use case diagrams to introduce functional reuirements. Use scenarios to play out some of the use cases.
