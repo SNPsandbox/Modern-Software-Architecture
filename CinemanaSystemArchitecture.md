@@ -16,7 +16,10 @@
 | 09/14/2023 | Kazi, Baara, Sushovan | Discussion for further changes. |
 | 14/04/2023 | Sushovan              | Added "System Context".            |
 | 19/04/2023 | Baara, Sushovan       | Added some database diagrams.                 |
-
+| 25/04/2023 | Kazi       | Process diagram.                |
+| 26/04/2023 | Baara       | Use case diagram and scenario update. |
+| 28/04/2023 |  Sushovan       | Refined the Requirements section.                 |
+| 01/05/2023 | Baara, Sushovan       | Reviewed the whole document.                 |
 ---
 
 ## Contents
@@ -24,17 +27,26 @@
 - [System Context](#1-system-context)
   - [Context](#11-context)
   - [Description](#12-description)
-  - [Business Information](#2-business-information)
-    - [Business Vision](#21-business-vision)
-    - [Target Audience](#22-target-audience)
-    - [System Evolution](#23-system-evolution)
-- [Stakeholders](#3-stakeholders)
-- [Quality Attributes](#4-quality-attributes)
-  - [Key Quality Concerns](#41-key-quality-concerns)
-- [Database Schema](#database-schema)
-  - [Database Components](#database-components)
-  - [Database Pipelines](#database-pipelines)
-- 
+- [Business Information](#2-business-information)
+  - [Business Vision](#21-business-vision)
+  - [Target Audience](#22-target-audience)
+  - [System Evolution](#23-system-evolution)
+- [Requirements](#3-requirements)
+  - [Architectural Vision](#31-architectural-vision)
+  - [Stakeholders](#32-stakeholders)
+  - [Quality Attributes](#33-quality-attributes)
+  - [Key Quality Concerns](#34-key-quality-concerns)
+  - [Stories and Use cases](#35-stories-and-use-cases)
+  - [Process diagram](#36-process-diagram)
+- [Database and Cloud](#4-database-and-cloud)
+  - [Database Schema](#41-database-schema)
+  - [Database Components](#42-database-components)
+  - [Database Pipelines](#43-database-pipelines)
+  - [Cloud Architecture](#44-cloud-architecture)
+- [Analysis](#5-analysis)
+  - [Assumptions](#51-assumptions)
+  - [Key Business Metrics](#52-key-business-metrics)
+  - [High-level-design-decisions](#53-high-level-design-decisions)
 
 ## 1. System Context
 
@@ -84,7 +96,20 @@ As soon as Cinemana is widely accepted by users in the target audience, the next
 <br>Furthermore, the goal is to develop a highly efficient and user friendly on-demand video streaming service that can be used across various devices under different kinds of internet speed. Hence, the system will be implemented to more devices (iOS and Android) and also be optimized to adjust video settings according to the available internet connection speed.
 <br>Additionally, with the increment of the supported devices, new versions of Cinemana will provide the users with better features backed up with AI.
 
-## 3. Stakeholders
+## 3. Requirements
+In this section, the requirements of the Cinemana are outlined. It starts with the architectural vision of the system, followed by the stakeholders and their concerns. Subsequently, the key drivers are presented, which are derived from the concerns of the stakeholders.
+
+### 3.1 Architectural Vision
+![1683267585697](image/CinemanaSystemArchitecture/1683267585697.png)
+
+Cinemana works on two clouds: AWS and Open Connect. These two clouds work together as the backbone of Cinemana and both are highly responsible for providing the best video to the subscribers. 
+The application has mainly 3 components:<br>
+<br><strong>Client:</strong> Device (User Interface) which is used to browse and play Cinemana videos. TV, XBOX, laptop or mobile phone, etc.<br>
+<br><strong>OC (Open connect) or Cinemana CDN:</strong> CDN is the network of distributed servers in different geographical locations, and Open Connect is Cinemana’s own custom global CDN (Content delivery network). It handles everything which involves video streaming. It is distributed in different locations and once you hit the play button the video stream from this component is displayed on your device. So if you’re trying to play the video sitting in North America, the video will be served from the nearest open connect (or server) instead of the original server (faster response from the nearest server).<br>
+<br><strong>Backend (Database):</strong> This part handles everything that doesn’t involve video streaming (before you hit the play button) such as onboarding new content, processing videos, distributing them to servers located in different parts of the world, and managing the network traffic. Most of the processes are taken care of by Amazon Web Services.
+Cinemana frontend is written in ReactJS for mainly three reasons: startup speed, runtime performance, and modularity.
+
+### 3.2 Stakeholders
 
 | Stakeholders          | Definition                                                                                                                                                                                                                                                                |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -95,7 +120,7 @@ As soon as Cinemana is widely accepted by users in the target audience, the next
 | Business stakeholders | Business stakeholders include executives, investors, and partners who have a financial interest in the success of Cinemana's software architecture. They need to ensure that the software is delivering value to the customers and that it is profitable for the company. |
 | Negative (hackers)    | Negative stakeholder is anyone who tries to use the system in an unethical way or harm the system and the users involved. This also includes users that download and then distribute the content of the system without permission.                                        |
 
-## 4. Quality Attributes
+### 3.3 Quality Attributes
 
 There are several quality attributes that are important for Cinemana software architecture from a software architecture perspective. These include:
 
@@ -107,25 +132,45 @@ There are several quality attributes that are important for Cinemana software ar
 * Usability: The software architecture needs to be easy to use, with intuitive interfaces and navigation that allow customers to quickly find and stream the content they are looking for.
 * Compatibility: The software architecture needs to be compatible with a wide range of devices and platforms, from desktop computers to mobile devices. This requires the software to be designed to work seamlessly with a variety of hardware and software configurations.
 
-### 4.1 Key Quality Concerns
+### 3.4 Key Quality Concerns
 
 | Key Quality concern | Concerned stakeholders | Viewpoints              |
 | ------------------- | ---------------------- | ----------------------- |
 | Security            | All                    | Layered pattern         |
 | Scalability         | Business stakeholders  | Deployment, Performance |
 | Usability           | Users, developers      | Functionality           |
-|                     |                        |                         |
 
-1. Security:
+### 1. Security:
 
    HTTPS — Encrypting the traffic between client and server over HTTPS. This will ensure that no one in the middle is able to see the data especially passwords.
 
    Authentication — Each API request post-log-in, will do authentication by checking the validity of auth_token in the authorization HTTP header. This ensures that the requests are legitimate.
 
    By analyzing the Cinemana system architecture using the layered pattern viewpoint, the security quality attribute can be addressed in a comprehensive and systematic way, ensuring that the system is secure at all levels of the architecture.
-   ![layered_pattern](image/CinemanaSystemArchitecture/layered_pattern.png)
+   Cinemana uses a layered security architecture with the following layers:
+
+1. Presentation layer: This layer interacts with the end users. It consists of the Cinemana website and mobile apps. This layer implements HTTPS to encrypt all communication between the users and Cinemana servers. It also uses authentication mechanisms like passwords, OTPs, etc. to verify user identities.
+
+2. Business layer: This layer contains the business logic and backend services of Cinemana. It exposes APIs to the presentation layer. These APIs are accessed over encrypted channels and also require authentication and authorization of the calling applications. This layer enforces security controls like rate limiting, input validation, etc. on the API requests. 
+
+3. Persistence layer: This layer handles data storage and retrieval. The business layer communicates with this layer to store and fetch data. This communication also happens over encrypted channels and requires authentication. The persistence layer enforces access control and encryption on the stored data.
+
+4. Database layer: This layer consists of the physical databases that store Cinemana data like user info, videos, etc. The persistence layer queries these databases. The databases themselves have security controls like authentication, access control, encryption, etc. to protect the data.
+
+The key aspects of this security architecture are:
+
+1. Encryption of all inter-layer communication using protocols like HTTPS.
+
+2. Authentication and authorization at each layer to verify identities and enforce access control. 
+
+3. Additional security controls like rate limiting, input validation, etc. at each layer.
+
+4. Restricting direct access to lower layers from upper layers - all access happens through well-defined APIs.
+
+5. Ensuring the security posture of each layer is robust and not dependent on any single layer. Each layer has its own controls, so security is applied in depth.
    By analyzing the Cinemana system architecture using the layered pattern viewpoint, the security quality attribute can be addressed in a comprehensive and systematic way, ensuring that the system is secure at all levels of the architecture.
-2. Scalability
+
+### 2. Scalability
 
    - Horizontal Scaling — add more application servers behind the load balancer to increase the capacity o the service.
      ![1682062270577](image/CinemanaSystemArchitecture/1682062270577.png)
@@ -136,17 +181,87 @@ There are several quality attributes that are important for Cinemana software ar
 3. Usability
    <br>The user interface (of the web app).
    ![cinemanaUI](image/CinemanaSystemArchitecture/cinemanaUI.png)
+   
+| Attribute | Description |
+| --- | --- |
+| Objective | Improve the user experience of the Cinemana platform by optimizing content recommendations. |
+| Specific | Implement a more efficient and accurate recommendation system that increases user engagement and satisfaction by providing personalized content suggestions based on users' viewing history and preferences. |
+| Measurable | Achieve a 10% increase in average user session duration and a 15% reduction in the number of users who cancel their subscription due to dissatisfaction with content recommendations within six months. |
+| Achievable | Utilize advanced machine learning algorithms and collaborative filtering techniques to enhance the existing recommendation system, while also incorporating feedback from user surveys and A/B testing to iteratively refine the approach. |
+| Relevant | Improving the usability and user experience of the platform is essential for retaining customers, increasing user satisfaction, and ensuring long-term success in the highly competitive streaming market. |
+| Time-bound | Complete the implementation and launch of the improved recommendation system within six months. Measure and analyze the results for a further three months to gauge the effectiveness of the improvements and identify any necessary refinements. |
 
-   TODO - Use use case diagrams to introduce functional reuirements. Use scenarios to play out some of the use cases.
+### 3.5 Stories and Use cases
+  ![1683267828196](image/CinemanaSystemArchitecture/1683267828196.png)  
+<br>
+<b>Scenario:</b><br>
+    So when talking about the use cases we can take a user who has a gold membership and wants to stream a movie on his phone as a scenario from both development and end-user viewpoints.
+    <ol>
+    <li>The user accesses the Cinemana application on their device and logs in to their account.
+    <li>The application sends a request to the Cinemana server to retrieve the user's account information and subscription status.
+    <li>The server verifies that the user has a gold membership subscription and sends back the corresponding meta-data.
+    <li>The application retrieves a list of available movies and displays them to the user.
+    <li>The user selects a movie to watch and clicks the "play" button.
+    <li>The application sends a request to the Cinemana server to initiate the movie stream.
+    <li>The server retrieves the movie data from its content delivery network (CDN) and starts streaming it to the user's device.
+    <li>The application displays the movie on the user's screen and provides playback controls (e.g. pause, rewind, fast forward).
+    <li>The user watches the movie and interacts with the playback controls as needed.
+    <li>When the movie is finished, the application sends a request to the server to end the stream.
+    <li>The server updates the user's viewing history and makes recommendations for future movies based on their viewing habits.
+    </ol>
+### 3.6 Process diagram
+  ![1683267861015](image/CinemanaSystemArchitecture/1683267861015.png)
 
-   ## Database Schema
+## 4. Database and Cloud
+  Cinemana uses two different databases i.e. MySQL(RDBMS) and Cassandra(NoSQL) for different purposes.  
+<br>EC2 Deployed MySQL<br>
+Cinemana saves data like billing information, user information, and transaction information in MySQL because it needs ACID compliance. Cinemana has a master-master setup for MySQL and it is deployed on Amazon large EC2 instances using InnoDB. 
+
+<br>The setup follows the “Synchronous replication protocol” where if the writer happens to be the primary master node then it will be also replicated to another master node. The acknowledgment will be sent only if both the primary and remote master nodes’ write have been confirmed. This ensures the high availability of data. 
+![1683268076097](image/CinemanaSystemArchitecture/1683268076097.png)
+<br>Cinemana has set up the read replica for each and every node (local, as well as cross-region). This ensures high availability and scalability.
+   
+   ### 4.1 Database Schema
 
    ![1682062025801](image/CinemanaSystemArchitecture/1682062025801.png)
 
-   ### Database Components
+   ### 4.2 Database Components
 
    ![1682062046379](image/CinemanaSystemArchitecture/1682062046379.png)
 
-   ### Database Pipelines
+   ### 4.3 Database Pipelines
 
    ![1682062080088](image/CinemanaSystemArchitecture/1682062080088.png)
+
+   ### 4.4 Cloud Architecture
+   Netflix cloud architecture is a highly available, scalable, and fault-tolerant system that operates on Amazon Web Services (AWS) using a microservices-based approach. It is designed to handle millions of requests per second and uses a variety of technologies such as Apache Cassandra, Apache Kafka, and Amazon Simple Storage Service (S3) to store and process massive amounts of data. The architecture includes several layers, including edge services, mid-tier services, and backend services, each with its own unique function and set of technologies. Netflix also employs chaos engineering practices to test and improve its system's resiliency to failures.
+
+## 5. Analysis
+
+  ### 5.1 Assumptions
+  1.Total number of daily active users = 100 million
+2.The peak daily active users, 100 million * 3 = 300 million
+3.The max peak daily active users in 3 months, 300 million * 2 = 600 million
+4.The average number of videos watched by each user per day = 5
+5.The average size of one video = 500 MB
+6.The average number of videos uploaded per day from the backend = 1,000
+7.Total number of videos watched per day = 100 million *5 =500 million
+8.Total peak video per day = 1.5 billion
+9.Total max peak video per day = 3 billion
+10.Total egress per day = 500 million * 500 MB = 250 PB (Peta Byte)
+11.Egress bandwidth = 29.1GB/sec
+12.Total ingress for upload = 1,000 * 500MB = 500GB
+13.Ingress bandwidth =5.8MB/sec
+14.Total Storage required in 5 years = 500 GB*5*365 = 912.5TB （please note that Cinemana creates multiple formats and resolutions for each video optimized for different device types. So the storage will be more than 912.5TB.
+
+  ### 5.2 Key Business Metrics
+  ![1683267889328](image/CinemanaSystemArchitecture/1683267889328.png)
+
+  ### 5.3 High-level Design Decisions
+  | Name | Fault tolerance |
+| --- | --- |
+| Decision | 1 |
+| Status | Approved |
+| Problem/Issue | Without fault tolerance, Cinemana would not be able to provide the highly available and resilient service. |
+| Decision | To handle issues around scale, distributed systems, single points of failure, software/hardware errors and transient issues while still ensuring high availability, fault tolerance is a core requirement for the Cinemana architecture. |
+| Arguments | The architecture is designed to handle failures gracefully. With a microservice architecture, individual service failures do not bring down the entire system. Other mechanisms like circuit breakers, fallback, retry, timeout etc. provide fault tolerance. |
