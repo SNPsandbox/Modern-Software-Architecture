@@ -209,7 +209,32 @@ The key aspects of this security architecture are:
     <li>The server updates the user's viewing history and makes recommendations for future movies based on their viewing habits.
     </ol>
 ### 3.6 Process diagram
-  ![1683267861015](image/CinemanaSystemArchitecture/1683267861015.png)
+  ![1683267861015](image/CinemanaSystemArchitecture/1683267861015.png) 
+  <br>
+  The sequence diagram depicts a scenario where a User is searching for and streaming a movie using a Client Application that communicates with a Server. The following actions occur in the sequence diagram:
+ <ol>
+<li>The User opens the Client Application.
+<li>The Client Application sends a request to the Server to retrieve the movie categories.
+<li>The Server responds with the movie categories.
+<li>The Client Application displays the movie categories to the User.
+<li>The User searches for a movie using the Client Application.
+<li>The Client Application sends a request to the Server to search for the movie.
+<li>The Server searches for the movie and returns the search results to the Client Application.
+<li>The Client Application displays the search results to the User.
+<li>The User selects a movie to stream.
+<li>The Client Application sends a request to the Server to retrieve the movie details.
+<li>The Server fetches the movie details and returns them to the Client Application.
+<li>The Client Application displays the movie details to the User.
+<li>The User starts the playback of the selected movie.
+<li>The Client Application sends a request to the Server to retrieve the playback URL.
+<li>The Server fetches the playback URL and returns it to the Client Application.
+<li>The Client Application starts streaming the movie using the playback URL.
+<li>The Server sends the movie chunks to the Client Application.
+<li>The Client Application requests the next movie chunk from the Server until the entire movie is streamed.
+<li>The User stops the playback of the movie.
+<li>The Client Application sends a request to the Server to terminate the connection.
+The above sequence diagram illustrates the interactions between the User, the Client Application, and the Server in a clear and organized manner, showing the order of messages sent.
+</ol>
 
 ## 4. Database and Cloud
   Cinemana uses two different databases i.e. MySQL(RDBMS) and Cassandra(NoSQL) for different purposes.  
