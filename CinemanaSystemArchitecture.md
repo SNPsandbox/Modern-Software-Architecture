@@ -239,21 +239,22 @@ Cinemana saves data like billing information, user information, and transaction 
 ## 5. Analysis
 
   ### 5.1 Assumptions
-  1.Total number of daily active users = 100 million
-2.The peak daily active users, 100 million * 3 = 300 million
-3.The max peak daily active users in 3 months, 300 million * 2 = 600 million
-4.The average number of videos watched by each user per day = 5
-5.The average size of one video = 500 MB
-6.The average number of videos uploaded per day from the backend = 1,000
-7.Total number of videos watched per day = 100 million *5 =500 million
-8.Total peak video per day = 1.5 billion
-9.Total max peak video per day = 3 billion
-10.Total egress per day = 500 million * 500 MB = 250 PB (Peta Byte)
-11.Egress bandwidth = 29.1GB/sec
-12.Total ingress for upload = 1,000 * 500MB = 500GB
-13.Ingress bandwidth =5.8MB/sec
-14.Total Storage required in 5 years = 500 GB*5*365 = 912.5TB （please note that Cinemana creates multiple formats and resolutions for each video optimized for different device types. So the storage will be more than 912.5TB.
-
+  <ol>
+<li>Total number of daily active users = 100 million
+<li>The peak daily active users, 100 million * 3 = 300 million
+<li>The max peak daily active users in 3 months, 300 million * 2 = 600 million
+<li>The average number of videos watched by each user per day = 5
+<li>The average size of one video = 500 MB
+<li>The average number of videos uploaded per day from the backend = 1,000
+<li>Total number of videos watched per day = 100 million *5 =500 million
+<li>Total peak video per day = 1.5 billion
+<li>Total max peak video per day = 3 billion
+<li>Total egress per day = 500 million * 500 MB = 250 PB (Peta Byte)
+<li>Egress bandwidth = 29.1GB/sec
+<li>Total ingress for upload = 1,000 * 500MB = 500GB
+<li>Ingress bandwidth =5.8MB/sec
+<li>Total Storage required in 5 years = 500 GB*5*365 = 912.5TB （please note that Cinemana creates multiple formats and resolutions for each video optimized for different device types. So the storage will be more than 912.5TB.
+</ol>
   ### 5.2 Key Business Metrics
   ![1683267889328](image/CinemanaSystemArchitecture/1683267889328.png)
 
