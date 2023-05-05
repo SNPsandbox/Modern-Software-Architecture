@@ -228,7 +228,7 @@ Cinemana saves data like billing information, user information, and transaction 
 
    ![1682062046379](image/CinemanaSystemArchitecture/1682062046379.png)
 
-   ### 4.4 Cloud Architecture
+   ### 4.3 Cloud Architecture
    Cinemana cloud architecture is a highly available, scalable, and fault-tolerant system that operates on Amazon Web Services (AWS) using a microservices-based approach. It is designed to handle millions of requests per second and uses a variety of technologies such as Apache Cassandra, Apache Kafka, and Amazon Simple Storage Service (S3) to store and process massive amounts of data. The architecture includes several layers, including edge services, mid-tier services, and backend services, each with its own unique function and set of technologies. Cinemana also employs chaos engineering practices to test and improve its system's resiliency to failures.
 
 ## 5. Analysis
