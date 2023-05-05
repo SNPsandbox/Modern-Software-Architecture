@@ -178,7 +178,7 @@ The key aspects of this security architecture are:
    - Database sharding — distributing data to multiple servers to perform read/write operations efficiently. we can share the video metadata database using video_id. Our hash function will map each video_id to a random server where we can store the video metadata.
    - Cache sharding — We can distribute our cache to multiple servers. Redis has out-of-box support for partitioning the data across multiple Redis instances. Using consistent Hashing for distributing data will ensure that load is equally distributed if one instance goes away.
    - Search database sharding — Elasticsearch comes with native support for sharding and replication. Sharding helps in improving the query runtime by running them in parallel against multiple shards.
-3. Usability
+### 3. Usability
    <br>The user interface (of the web app).
    ![cinemanaUI](image/CinemanaSystemArchitecture/cinemanaUI.png)
    
