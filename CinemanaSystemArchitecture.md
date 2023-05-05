@@ -41,7 +41,7 @@
 - [Database and Cloud](#4-database-and-cloud)
   - [Database Schema](#41-database-schema)
   - [Database Components](#42-database-components)
-  - [Cloud Architecture](#44-cloud-architecture)
+  - [Cloud Architecture](#43-cloud-architecture)
 - [Analysis](#5-analysis)
   - [Assumptions](#51-assumptions)
   - [Key Business Metrics](#52-key-business-metrics)
@@ -251,6 +251,7 @@ Cinemana saves data like billing information, user information, and transaction 
 <li>Total Storage required in 5 years = 500 GB*5*365 = 912.5TB （please note that Cinemana creates multiple formats and resolutions for each video optimized for different device types. So the storage will be more than 912.5TB.
 </ol>
   ### 5.2 Key Business Metrics
+  
   ![1683267889328](image/CinemanaSystemArchitecture/1683267889328.png)
 
   ### 5.3 High-level Design Decisions
