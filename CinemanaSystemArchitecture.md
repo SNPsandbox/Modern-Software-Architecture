@@ -106,7 +106,7 @@ In this section, the requirements of the Cinemana are outlined. It starts with t
  <figure align="center">
   <img src="image/CinemanaSystemArchitecture/1683602600562.png" alt="Architectural Vision">
   <figcaption align="center">Fig 1: Architectural Vision Cmponent breakdown for Cinemana</figcaption>
-</figure>
+</figure><br>
 
 
 Cinemana works on two clouds: AWS and Open Connect. These two clouds work together as the backbone of Cinemana and both are highly responsible for providing the best video to the subscribers. 
