@@ -12,14 +12,17 @@
 | ---------- | --------------------- | ----------------------------------- |
 | 30/03/2023 | Sushovan              | Initial comit to github.            |
 | 03/04/2023 | All                   | Updated the key quality attributes. |
-| 06/04/2023 | Sushovan, Baara, Kazi | Finished three quality attributes.  |
-| 09/14/2023 | Kazi, Baara, Sushovan | Discussion for further changes. |
+| 06/04/2023 | Sushovan, Baraa, Kazi | Finished three quality attributes.  |
+| 09/14/2023 | Kazi, Baraa, Sushovan | Discussion for further changes. |
 | 14/04/2023 | Sushovan              | Added "System Context".            |
-| 19/04/2023 | Baara, Sushovan       | Added some database diagrams.                 |
+| 19/04/2023 | Baraa, Sushovan       | Added some database diagrams.                 |
 | 25/04/2023 | Kazi       | Process diagram.                |
-| 26/04/2023 | Baara       | Use case diagram and scenario update. |
+| 26/04/2023 | Baraa       | Use case diagram and scenario update. |
 | 28/04/2023 |  Sushovan       | Refined the Requirements section.                 |
-| 01/05/2023 | Baara, Sushovan       | Reviewed the whole document.                 |
+| 01/05/2023 | Baraa, Sushovan       | Reviewed the whole document.                 |
+| 05/05/2023 | All       | First draft presentation.                 |
+| 09/05/2023 | All       | Revised the whole document.                 |
+| 11/05/2023 | Sushovan       | Final revision.                 |
 ---
 
 ## Contents
@@ -40,12 +43,13 @@
   - [Process diagram](#36-process-diagram)
 - [Database and Cloud](#4-database-and-cloud)
   - [Database Schema](#41-database-schema)
-  - [Database Components](#42-database-components)
-  - [Cloud Architecture](#43-cloud-architecture)
+  - [Database Pipelines](#42-database-pipelines)
+  - [Cloud Architecture](#44-cloud-architecture)
 - [Analysis](#5-analysis)
   - [Assumptions](#51-assumptions)
   - [Key Business Metrics](#52-key-business-metrics)
   - [High-level-design-decisions](#53-high-level-design-decisions)
+- [References](#references)
 
 ## 1. System Context
 
@@ -99,7 +103,11 @@ As soon as Cinemana is widely accepted by users in the target audience, the next
 In this section, the requirements of the Cinemana are outlined. It starts with the architectural vision of the system, followed by the stakeholders and their concerns. Subsequently, the key drivers are presented, which are derived from the concerns of the stakeholders.
 
 ### 3.1 Architectural Vision
-![1683267585697](image/CinemanaSystemArchitecture/1683267585697.png)
+ <figure align="center">
+  <img src="image/CinemanaSystemArchitecture/1683602600562.png" alt="Architectural Vision">
+  <figcaption align="center">Fig 1: Architectural Vision Cmponent breakdown for Cinemana</figcaption>
+</figure>
+
 
 Cinemana works on two clouds: AWS and Open Connect. These two clouds work together as the backbone of Cinemana and both are highly responsible for providing the best video to the subscribers. 
 The application has mainly 3 components:<br>
@@ -135,9 +143,9 @@ There are several quality attributes that are important for Cinemana software ar
 
 | Key Quality concern | Concerned stakeholders | Viewpoints              |
 | ------------------- | ---------------------- | ----------------------- |
-| Security            | All                    | Layered pattern         |
+| Security            | All                    | Layered          |
 | Scalability         | Business stakeholders  | Deployment, Performance |
-| Usability           | Users, developers      | Functionality           |
+| Usability           | Users, developers      | Logical           |
 
 ### 1. Security:
 
@@ -172,14 +180,21 @@ The key aspects of this security architecture are:
 ### 2. Scalability
 
    - Horizontal Scaling — add more application servers behind the load balancer to increase the capacity o the service.
-     ![1682062270577](image/CinemanaSystemArchitecture/1682062270577.png)
+  <figure align="center"> <img src="image/CinemanaSystemArchitecture/1682062270577.png" alt="Load Balancing">
+  <figcaption align="center">Fig 2: Load balancing</figcaption>
+  </figure><br>
+  
    - Database replication — Use the relational database in Master-slave configuration where the write will happen to the master and reads from the slave. This will improve the performance of reading queries as they won’t be stopped due to write locks on rows. There is a slight replication lag (a few milliseconds) as data is written to the master DB and then propagated to the slave DB.
    - Database sharding — distributing data to multiple servers to perform read/write operations efficiently. we can share the video metadata database using video_id. Our hash function will map each video_id to a random server where we can store the video metadata.
    - Cache sharding — We can distribute our cache to multiple servers. Redis has out-of-box support for partitioning the data across multiple Redis instances. Using consistent Hashing for distributing data will ensure that load is equally distributed if one instance goes away.
    - Search database sharding — Elasticsearch comes with native support for sharding and replication. Sharding helps in improving the query runtime by running them in parallel against multiple shards.
 ### 3. Usability
-   <br>The user interface (of the web app).
-   ![cinemanaUI](image/CinemanaSystemArchitecture/cinemanaUI.png)
+  The user interface (of the web app).
+  <br>
+  <figure align="center">
+  <img src="image/CinemanaSystemArchitecture/cinemanaUI.png" alt="UI">
+  <figcaption align="center">Fig 3: User Interface fot the web version of Cinemana</figcaption>
+</figure><br>
    
 | Attribute | Description |
 | --- | --- |
@@ -191,7 +206,10 @@ The key aspects of this security architecture are:
 | Time-bound | Complete the implementation and launch of the improved recommendation system within six months. Measure and analyze the results for a further three months to gauge the effectiveness of the improvements and identify any necessary refinements. |
 
 ### 3.5 Stories and Use cases
-  ![1683267828196](image/CinemanaSystemArchitecture/1683267828196.png)  
+<figure>
+  <img src="image/CinemanaSystemArchitecture/1683609350522.png" alt="Use case diagram">
+  <figcaption align="center">Fig 4: Use-case diagram</figcaption>
+</figure>
 <br>
 <b>Scenario:</b><br>
     So when talking about the use cases we can take a user who has a gold membership and wants to stream a movie on his phone as a scenario from both development and end-user viewpoints.
@@ -208,33 +226,50 @@ The key aspects of this security architecture are:
     <li>When the movie is finished, the application sends a request to the server to end the stream.
     <li>The server updates the user's viewing history and makes recommendations for future movies based on their viewing habits.
     </ol>
+
+   ### Functionalities
+  Cinemana offers a range of features for its users:
+
+- **Account Management:** Users can create an account, log in, and delete their account as needed.
+
+- **Subscription Plans:** Users can subscribe or unsubscribe to different plans based on their needs and preferences.
+
+- **Multiple Accounts:** Cinemana allows users to have and handle multiple accounts as needed.
+
+- **Video Streaming:** Users can watch videos on the platform.
+
+- **Offline Viewing:** Users can download videos and watch them in offline mode.
+
+- **Search and Discovery:** Users can search and discover videos through the video title.
+
+- **Video Upload:** Cinemana developers can upload videos from the backend and show them on the platform.
+
+- **Content Categorization:** The platform categorizes videos by trend, most popular, and by category to make it easy for users to choose.
+
+- **Subtitles:** Users can select language subtitles so they can watch videos in any language.
+
+- **Video Grouping:** Cinemana groups videos into TV series, drama series, and movie series, treating each video as an independent entity.
+
+- **Analytics and Recommendations:** The platform provides user suggestions or recommendations for similar videos based on the user's behavior.
+
+- **Multiple Device Synchronization:** Users can synchronize different devices under the same account, allowing them to continue watching the same episode without replay.
+
+- **24/7 Playback:** Videos can be played back 24/7.
+
+- **Fallback:** The platform provides a fallback option in case of playback issues or errors.
+
+<figure align="center">
+  <img src="image/CinemanaSystemArchitecture/1683791142944.png" alt="Logical viewpoint for functionalities">
+  <figcaption align="center">Fig 5: Logical viewpoint of the functional requirements</figcaption>
+</figure>
+<br>
+
+
 ### 3.6 Process diagram
-  ![1683267861015](image/CinemanaSystemArchitecture/1683267861015.png) 
-  <br>
-  The sequence diagram depicts a scenario where a User is searching for and streaming a movie using a Client Application that communicates with a Server. The following actions occur in the sequence diagram:
- <ol>
-<li>The User opens the Client Application.
-<li>The Client Application sends a request to the Server to retrieve the movie categories.
-<li>The Server responds with the movie categories.
-<li>The Client Application displays the movie categories to the User.
-<li>The User searches for a movie using the Client Application.
-<li>The Client Application sends a request to the Server to search for the movie.
-<li>The Server searches for the movie and returns the search results to the Client Application.
-<li>The Client Application displays the search results to the User.
-<li>The User selects a movie to stream.
-<li>The Client Application sends a request to the Server to retrieve the movie details.
-<li>The Server fetches the movie details and returns them to the Client Application.
-<li>The Client Application displays the movie details to the User.
-<li>The User starts the playback of the selected movie.
-<li>The Client Application sends a request to the Server to retrieve the playback URL.
-<li>The Server fetches the playback URL and returns it to the Client Application.
-<li>The Client Application starts streaming the movie using the playback URL.
-<li>The Server sends the movie chunks to the Client Application.
-<li>The Client Application requests the next movie chunk from the Server until the entire movie is streamed.
-<li>The User stops the playback of the movie.
-<li>The Client Application sends a request to the Server to terminate the connection.
-The above sequence diagram illustrates the interactions between the User, the Client Application, and the Server in a clear and organized manner, showing the order of messages sent.
-</ol>
+<figure align="center">
+  <img src="image/CinemanaSystemArchitecture/1683267861015.png" alt="Process Diagram">
+  <figcaption align="center">Fig 6: Process Diagram</figcaption>
+</figure><br>
 
 ## 4. Database and Cloud
   Cinemana uses two different databases i.e. MySQL(RDBMS) and Cassandra(NoSQL) for different purposes.  
@@ -242,44 +277,63 @@ The above sequence diagram illustrates the interactions between the User, the Cl
 Cinemana saves data like billing information, user information, and transaction information in MySQL because it needs ACID compliance. Cinemana has a master-master setup for MySQL and it is deployed on Amazon large EC2 instances using InnoDB. 
 
 <br>The setup follows the “Synchronous replication protocol” where if the writer happens to be the primary master node then it will be also replicated to another master node. The acknowledgment will be sent only if both the primary and remote master nodes’ write have been confirmed. This ensures the high availability of data. 
-![1683268076097](image/CinemanaSystemArchitecture/1683268076097.png)
-<br>Cinemana has set up the read replica for each and every node (local, as well as cross-region). This ensures high availability and scalability.
+<figure>
+  <img src="image/CinemanaSystemArchitecture/1683268076097.png" alt="Synchronous replication protocol">
+  <figcaption align="center">Fig 7: Synchronous replication protocol</figcaption>
+</figure><br>
+Cinemana has set up the read replica for each and every node (local, as well as cross-region). This ensures high availability and scalability.
    
    ### 4.1 Database Schema
+  <figure align="center">
+  <img src="image/CinemanaSystemArchitecture/1682062025801.png" alt="Database Schema">
+  <figcaption align="center">Fig 8: Database Schema</figcaption>
+  </figure>
 
-   ![1682062025801](image/CinemanaSystemArchitecture/1682062025801.png)
 
-   ### 4.2 Database Components
-
-   ![1682062046379](image/CinemanaSystemArchitecture/1682062046379.png)
-
-   ### 4.3 Cloud Architecture
-   Cinemana cloud architecture is a highly available, scalable, and fault-tolerant system that operates on Amazon Web Services (AWS) using a microservices-based approach. It is designed to handle millions of requests per second and uses a variety of technologies such as Apache Cassandra, Apache Kafka, and Amazon Simple Storage Service (S3) to store and process massive amounts of data. The architecture includes several layers, including edge services, mid-tier services, and backend services, each with its own unique function and set of technologies. Cinemana also employs chaos engineering practices to test and improve its system's resiliency to failures.
+   ### 4.2 Database Pipelines
+  <figure align="center">
+  <img src="image/CinemanaSystemArchitecture/1682062080088.png" alt="Database Pipelines">
+  <figcaption align="center">Fig 9: Database Pipelines</figcaption>
+</figure>
+ 
+   ### 4.4 Cloud Architecture
+   Netflix cloud architecture is a highly available, scalable, and fault-tolerant system that operates on Amazon Web Services (AWS) using a microservices-based approach. It is designed to handle millions of requests per second and uses a variety of technologies such as Apache Cassandra, Apache Kafka, and Amazon Simple Storage Service (S3) to store and process massive amounts of data. The architecture includes several layers, including edge services, mid-tier services, and backend services, each with its own unique function and set of technologies. Netflix also employs chaos engineering practices to test and improve its system's resiliency to failures.
 
 ## 5. Analysis
 
   ### 5.1 Assumptions
-  <ol>
-<li>Total number of daily active users = 100 million
-<li>The peak daily active users, 100 million * 3 = 300 million
-<li>The max peak daily active users in 3 months, 300 million * 2 = 600 million
-<li>The average number of videos watched by each user per day = 5
-<li>The average size of one video = 500 MB
-<li>The average number of videos uploaded per day from the backend = 1,000
-<li>Total number of videos watched per day = 100 million *5 =500 million
-<li>Total peak video per day = 1.5 billion
-<li>Total max peak video per day = 3 billion
-<li>Total egress per day = 500 million * 500 MB = 250 PB (Peta Byte)
-<li>Egress bandwidth = 29.1GB/sec
-<li>Total ingress for upload = 1,000 * 500MB = 500GB
-<li>Ingress bandwidth =5.8MB/sec
-<li>Total Storage required in 5 years = 500 GB*5*365 = 912.5TB （please note that Cinemana creates multiple formats and resolutions for each video optimized for different device types. So the storage will be more than 912.5TB.
-</ol>
+
+1. Total number of daily active users = 100 million
+2. The peak daily active users, 100 million * 3 = 300 million
+3. The max peak daily active users in 3 months, 300 million * 2 = 600 million
+4. The average number of videos watched by each user per day = 5
+5. The average size of one video = 500 MB
+6. The average number of videos uploaded per day from the backend = 1,000
+7. Total number of videos watched per day = 100 million * 5 = 500 million
+8. Total peak video per day = 1.5 billion
+9. Total max peak video per day = 3 billion
+10. Total egress per day = 500 million * 500 MB = 250 PB (Peta Byte)
+11. Egress bandwidth = 29.1GB/sec
+12. Total ingress for upload = 1,000 * 500MB = 500GB
+13. Ingress bandwidth = 5.8MB/sec
+14. Total Storage required in 5 years = 500 GB * 5 * 365 = 912.5TB (Please note that Cinemana creates multiple formats and resolutions for each video optimized for different device types. So the storage will be more than 912.5TB.)
+<br><br>
+<figure>
+  <img src="image/CinemanaSystemArchitecture/1683789419101.png" alt="Capacity Estimation">
+  <figcaption align="center">Fig 10: Capacity Estimation</figcaption>
+</figure>
+
   ### 5.2 Key Business Metrics
-  
-  ![1683267889328](image/CinemanaSystemArchitecture/1683267889328.png)
+  <figure align="center">
+  <img src="image/CinemanaSystemArchitecture/1683267889328.png" alt="Key Business Metrics">
+  <figcaption align="center">Fig 11: Key Business Metrics</figcaption>
+</figure>
 
   ### 5.3 High-level Design Decisions
+
+<Strong> High level Design Decision 1: To ensure fault tolerance in the Cinemana architecture</strong>
+<br>
+
   | Name | Fault tolerance |
 | --- | --- |
 | Decision | 1 |
@@ -287,3 +341,34 @@ Cinemana saves data like billing information, user information, and transaction 
 | Problem/Issue | Without fault tolerance, Cinemana would not be able to provide the highly available and resilient service. |
 | Decision | To handle issues around scale, distributed systems, single points of failure, software/hardware errors and transient issues while still ensuring high availability, fault tolerance is a core requirement for the Cinemana architecture. |
 | Arguments | The architecture is designed to handle failures gracefully. With a microservice architecture, individual service failures do not bring down the entire system. Other mechanisms like circuit breakers, fallback, retry, timeout etc. provide fault tolerance. |
+| Design Decision | To ensure fault tolerance in the Cinemana architecture |
+| Alternatives | - Redundancy and replication<br>- Load balancing<br>- Disaster recovery and backup<br>- Graceful degradation<br>- Failover and self-healing<br>- Monitoring and alerting |
+| Implications | - Increases system availability and resilience<br>- Reduces the likelihood of service disruptions and downtime<br>- Enables the system to handle unexpected failures and errors gracefully<br>- Provides a better user experience and customer satisfaction |
+| Possible Negative Impact on Quality | - Over-provisioning redundancy and replication may increase costs and complexity<br>- Improper load balancing may cause uneven resource allocation and impact system performance<br>- Inadequate disaster recovery and backup may result in data loss and service disruption<br>- Poorly designed graceful degradation may result in degraded service quality and user frustration<br>- Failover and self-healing mechanisms may cause service disruptions if not implemented properly<br>- Excessive monitoring and alerting may result in information overload and distract from critical issues|
+
+<br><Strong> High level Design Decision 2: To address the fallout problem in the streaming service</strong>
+<br>
+
+| Name | Fallout |
+| --- | --- |
+| Decision | 2 |
+| Status | Approved |
+| Problem/Issue | The "fallout" problem is a term used to describe the situation where a user starts to watch a movie or TV show on Cinemana but then abandons it before finishing. This can be a problem for Cinemana because it can lead to a lower engagement rate and potentially impact the user's satisfaction with the service. |
+| Decision | To address the fallout problem, Cinemana has developed various strategies, such as personalized recommendations, auto-play next episode, and pre-loading content to reduce buffering time. Cinemana also uses data analytics to analyze user behavior, including when and why users stop watching a particular show or movie. This data is then used to make recommendations and improve the overall user experience. |
+| Arguments | Overall, the fallout problem is a challenge for any streaming service, as users have a vast choice of content and can easily switch to other options. By continually improving its algorithms and 
+| Design Decision | To address the fallout problem in the streaming service |
+| Alternatives | - Personalized recommendations<br>- Auto-play next episode<br>- Pre-loading content to reduce buffering time |
+| Implications | - Improves engagement rate<br>- Enhances user experience<br>- Reduces the likelihood of user churn<br>- Enables the service to gather valuable data on user behavior |
+| Possible Negative Impact on Quality | - Over-reliance on algorithmic recommendations may limit user choice and serendipity<br>- Auto-play next episode may encourage binge-watching, which can have negative health effects<br>- Pre-loading content may impact data usage and device storage capacity<br>- Inaccurate recommendations may result in frustration and dissatisfaction with the service<br>- Overloading the user interface with too many recommendations may overwhelm users |
+| Feature solution graph|![1683707340943](image/CinemanaSystemArchitecture/1683707340943.png)|
+
+
+# References
+<ol>
+<li> System Architecture: Home Power Save, University of Groningen, Faculty of Mathematics and Natural Sciences, Department of Computing Science, Software Architecture
+<li> Ten years on: How Netflix completed a historic cloud migration with AWS. By Tom Macaulay on Computerworld. Sep 10, 2018.
+<li> Performance Vs Scalability. By Beekums. Aug 19, 2017.
+<li> Len Bass, Paul Clements, Rick Kazman. Software Architecture in Practice Third Edition
+<li> Automating Operations of a Global CDN. By Robert Fernandes at Strange Loop. Sep 14, 2019.
+<li> 软件体系结构描述 slides.
+</ol>
